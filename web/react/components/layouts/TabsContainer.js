@@ -9,6 +9,109 @@ import compose from '@/fe-sdk/utils/compose';
 import Authorized from '@/utils/Authorized';
 import getIn from '@/fe-sdk/utils/getIn';
 
+const tabsModels = modelsFactory({
+  /* namespace */
+  namespace: 'tabs',
+  state: {
+    currentTab: '',
+    tabPanes: [],
+  },
+  reducers: {
+    init() {
+      return {
+        currentTab: '',
+        tabPanes: [],
+      };
+    },
+    setCurrentTab(
+      state,
+      {
+        payload: { currentTab },
+      }
+    ) {
+      return {
+        ...state,
+        currentTab,
+      };
+    },
+    addTabPanes(
+      state,
+      {
+        payload: { pane },
+      }
+    ) {
+      const { tabPanes } = state;
+      return {
+        ...state,
+        tabPanes: [...tabPanes, pane],
+      };
+    },
+    setTabPanes(
+      state,
+      {
+        payload: { pane },
+      }
+    ) {
+      const { tabPanes } = state;
+      const oldPaneIndex = tabPanes.findIndex(
+        i => i.pathname === pane.pathname
+      );
+      const newPane = [...tabPanes];
+      newPane[oldPaneIndex] = pane;
+      return {
+        ...state,
+        tabPanes: newPane,
+      };
+    },
+    removeTabPanes(
+      state,
+      {
+        payload: { paneIndex },
+      }
+    ) {
+      const { tabPanes } = state;
+      const newPane = tabPanes.filter(i => i.fullpath !== paneIndex);
+      return {
+        ...state,
+        tabPanes: newPane,
+      };
+    },
+    removeAnthorPanes(state, { payload }) {
+      const { tabPanes } = state;
+      return {
+        ...state,
+        currentTab: payload,
+        tabPanes: tabPanes.filter(tab => tab.fullpath === payload),
+      };
+    },
+    removeRightPanes(state, { payload }) {
+      const { tabPanes, currentTab } = state;
+      const idx = tabPanes.findIndex(tab => tab.fullpath === payload);
+      const curIdx = tabPanes.findIndex(tab => tab.fullpath === currentTab);
+      const newCur = curIdx <= idx ? currentTab : payload;
+      return {
+        ...state,
+        currentTab: newCur,
+        tabPanes: tabPanes.slice(0, idx + 1),
+      };
+    },
+    removeLeftPanes(state, { payload }) {
+      const { tabPanes, currentTab } = state;
+      const idx = tabPanes.findIndex(tab => tab.fullpath === payload);
+      const curIdx = tabPanes.findIndex(tab => tab.fullpath === currentTab);
+      const newCur = curIdx >= idx ? currentTab : payload;
+      return {
+        ...state,
+        currentTab: newCur,
+        tabPanes: tabPanes.slice(idx),
+      };
+    },
+  },
+  subscriptions: {},
+  request,
+  message,
+});
+
 const { TabPane } = Tabs;
 
 /* 样式 */
@@ -79,7 +182,19 @@ function findCurrentRoute(pathname, routes) {
   return currentRoute;
 }
 
-const TabsContainer = ({ dispatch, tabPanes, currentTab, children, routes, location }) => {
+const TabsContainer = ({
+  dispatch,
+  tabPanes,
+  currentTab,
+  children,
+  routes,
+  location,
+}) => {
+
+  useEffect(() => {
+    app.replaceModel(tabsModels);
+  }, []);
+  
   const { pathname, search, query } = location;
 
   const title = getIn(query, ['tabTitle'], '空标题');
@@ -106,7 +221,9 @@ const TabsContainer = ({ dispatch, tabPanes, currentTab, children, routes, locat
     };
 
     if (multiple) {
-      const finedPane = tabPanes.some(pane => pane && pane.fullpath === fullpath);
+      const finedPane = tabPanes.some(
+        pane => pane && pane.fullpath === fullpath
+      );
       if (!finedPane) {
         dispatch({
           type: 'tabs/addTabPanes',
@@ -116,7 +233,9 @@ const TabsContainer = ({ dispatch, tabPanes, currentTab, children, routes, locat
         });
       }
     } else {
-      const finedPane = tabPanes.find(pane => pane && pane.pathname === pathname);
+      const finedPane = tabPanes.find(
+        pane => pane && pane.pathname === pathname
+      );
       if (finedPane) {
         if (finedPane.search !== search) {
           dispatch({
@@ -145,9 +264,12 @@ const TabsContainer = ({ dispatch, tabPanes, currentTab, children, routes, locat
 
   // 删除对应tab
   function removeTab(key) {
-    const currentIndex = tabPanes.findIndex(tabPane => tabPane.fullpath === fullpath);
+    const currentIndex = tabPanes.findIndex(
+      tabPane => tabPane.fullpath === fullpath
+    );
     if (key === fullpath) {
-      const newTab = currentIndex === 0 ? tabPanes[1] : tabPanes[currentIndex - 1];
+      const newTab =
+        currentIndex === 0 ? tabPanes[1] : tabPanes[currentIndex - 1];
       router.push(newTab.fullpath);
     }
     dispatch({
@@ -257,8 +379,15 @@ const TabsContainer = ({ dispatch, tabPanes, currentTab, children, routes, locat
             // const { name, component: Component } = curRoute;
 
             return (
-              <TabPane key={key} tab={renderTabTitle(key, name, tabPane)} closable={false}>
-                <Authorized authority={routerConfig} noMatch={<Redirect to="/exception/403" />}>
+              <TabPane
+                key={key}
+                tab={renderTabTitle(key, name, tabPane)}
+                closable={false}
+              >
+                <Authorized
+                  authority={routerConfig}
+                  noMatch={<Redirect to="/exception/403" />}
+                >
                   <Component />
                 </Authorized>
               </TabPane>
@@ -266,7 +395,10 @@ const TabsContainer = ({ dispatch, tabPanes, currentTab, children, routes, locat
           })}
         </CusTabs>
       ) : (
-        <Authorized authority={routerConfig} noMatch={<Redirect to="/exception/403" />}>
+        <Authorized
+          authority={routerConfig}
+          noMatch={<Redirect to="/exception/403" />}
+        >
           {children}
         </Authorized>
       )}
@@ -276,5 +408,5 @@ const TabsContainer = ({ dispatch, tabPanes, currentTab, children, routes, locat
 
 export default compose(
   connect(({ tabs: { tabPanes, currentTab } }) => ({ tabPanes, currentTab })),
-  withRouter,
+  withRouter
 )(TabsContainer);

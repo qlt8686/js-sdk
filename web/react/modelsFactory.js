@@ -1,5 +1,3 @@
-import getIn from './getIn';
-
 /**
  *
  * @param {名称空间} namespace string
@@ -10,13 +8,12 @@ import getIn from './getIn';
 export default ({
   namespace,
   state: store = {},
-  apis,
+  apis = {},
   reducers = {},
   subscriptions = {},
-  message,
   request,
 }) => {
-  const options = { namespace, apis, request };
+  const options = { namespace, request };
 
   Object.keys(options).forEach(i => {
     if (options[i] === undefined) {
@@ -39,16 +36,13 @@ export default ({
         case 'string': {
           // 如果是string 就生成一个名字相同的effect
           const services = params => request(value, params);
-          newEffects[key] = function*({ payload, silence, errCatcher = true }, { call, put }) {
-            // 根据payload 判断是否 有消息提示
-            const showSuccessMsg = getIn(silence, ['success']);
-            const showErrorMsg = getIn(silence, ['error']);
-
+          newEffects[key] = function*(
+            { payload, silence, errCatcher = true },
+            { call, put }
+          ) {
             try {
               // 错误处理和消息提示
               const response = yield call(services, payload);
-              const { msg } = response;
-              if (!(silence === true || showSuccessMsg) && message) message.success(msg);
               // 最后将整个response存入state
               yield put({
                 type: 'save',
@@ -57,7 +51,6 @@ export default ({
               // 返回response
               return response;
             } catch (e) {
-              if (!(silence === true || showErrorMsg) && message) message.error(e.message);
               if (errCatcher) {
                 throw e;
               } else {
@@ -75,7 +68,7 @@ export default ({
           break;
         default:
           throw new Error(
-            'only can support function and string, please checkout your params valid!',
+            'only can support function and string, please checkout your params valid!'
           );
       }
 
@@ -93,7 +86,7 @@ export default ({
     {
       state: store,
       effects: {},
-    },
+    }
   );
 
   return {
