@@ -1,10 +1,11 @@
-export default (
+export default ({
   base64,
   maxWidth = Infinity,
   maxHeight = Infinity,
   outputType = 'file',
-  outType = 'image/png'
-) => {
+  outType = 'image/png',
+  Orientation = 0,
+}) => {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.src = base64;
@@ -32,8 +33,37 @@ export default (
       canvas.width = targetWidth;
       canvas.height = targetHeight;
       context.clearRect(0, 0, targetWidth, targetHeight);
+
+      switch (Orientation) {
+        case 6: // 旋转90度
+          canvas.width = targetHeight;
+          canvas.height = targetWidth;
+          context.rotate(Math.PI / 2);
+          context.drawImage(img, 0, -targetHeight, targetWidth, targetHeight);
+          break;
+        case 3: // 旋转180度
+          context.rotate(Math.PI);
+          context.drawImage(
+            img,
+            -targetWidth,
+            -targetHeight,
+            targetWidth,
+            targetHeight
+          );
+          break;
+        case 8: // 旋转-90度
+          canvas.width = targetHeight;
+          canvas.height = targetWidth;
+          context.rotate((3 * Math.PI) / 2);
+          context.drawImage(img, -targetWidth, 0, targetWidth, targetHeight);
+          break;
+        default:
+          context.drawImage(img, 0, 0, targetWidth, targetHeight);
+      }
       // 图片压缩
       context.drawImage(img, 0, 0, targetWidth, targetHeight);
+      const buffer = context.getImageData(0, 0, targetHeight, targetWidth);
+
       switch (outputType) {
         case 'file':
           canvas.toBlob(blob => {
@@ -55,6 +85,9 @@ export default (
           break;
         case 'base64':
           resolve(canvas.toDataURL());
+          break;
+        case 'buffer':
+          resolve(buffer.data);
           break;
         default:
           reject('error, no output type.');
