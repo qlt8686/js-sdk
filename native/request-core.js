@@ -9,7 +9,7 @@ export default (
     ...options
   }
 ) =>
-  request(url, options)
+  request(url, { getResponse: true, ...options })
     .then(bussStatusHandler)
     .then(successHandler)
     .catch(errorHandler);
