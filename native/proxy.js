@@ -1,4 +1,9 @@
-// 端口转发
+/**
+ * 参考webpack devServer 的 proxy
+ * https://webpack.docschina.org/configuration/dev-server/#devserver-proxy
+ * @param {url} url 请求的url
+ * @param {options} Options proxy的参数
+ */
 export default (url, proxy) => {
   const matchKey = Object.keys(proxy).find(i => url.match(`^${i}`)) || '';
   const { target, pathRewrite = {} } = proxy[matchKey] || {};
