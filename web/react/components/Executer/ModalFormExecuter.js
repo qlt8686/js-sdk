@@ -45,7 +45,7 @@ class ModalExecuter {
     return this;
   }
 
-  destory() {
+  destroy() {
     this.hiden();
     ReactDOM.unmountComponentAtNode(this.el);
     this.el.parentNode.removeChild(this.el);
@@ -68,8 +68,8 @@ class ModalExecuter {
 
 const ModalExecuterMgt = props => new ModalExecuter(props);
 
-ModalExecuterMgt.destoryAll = () => {
-  queue.forEach(cusModal => setTimeout(() => cusModal.destory()));
+ModalExecuterMgt.destroyAll = () => {
+  queue.forEach(cusModal => setTimeout(() => cusModal.destroy()));
 };
 
 ModalExecuterMgt.hidenAll = () => {
