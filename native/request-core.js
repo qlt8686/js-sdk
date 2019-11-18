@@ -1,4 +1,4 @@
-import request from 'umi-request';
+import axios from 'axios';
 
 export default function(url, options = {}) {
   const {
@@ -8,7 +8,7 @@ export default function(url, options = {}) {
     ...restOptions
   } = options;
 
-  return request(url, { getResponse: true, ...restOptions })
+  return axios(url, restOptions)
     .then(extraHandler)
     .then(successHandler)
     .catch(errorHandler);
