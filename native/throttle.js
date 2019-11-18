@@ -1,3 +1,5 @@
+import { deepClone } from './tco';
+
 // 摘自 http://hackll.com/2015/11/19/debounce-and-throttle/
 /**
  *
@@ -6,13 +8,19 @@
  *
  * @return {Function}     返回一个“节流”函数
  */
-export default (fn, threshold = 500) => {
+export default (fn, threshold = 500, backupParams) => {
   // 定时器
   let timer;
-  // 默认间隔为 250ms
+  // 默认间隔为 500ms
   // 返回的函数，每过 threshold 毫秒就执行一次 fn 函数
-  return () => {
+  return (...arg) => {
     const now = +new Date();
+    const argBackup = backupParams
+      ? backupParams.map((coord, idx) =>
+          coord.reduce((acc, cur) => ({ ...acc, [cur]: arg[idx][cur] }), {})
+        )
+      : arg;
+
     // 如果距离上次执行 fn 函数的时间小于 threshold，那么就放弃
     // 执行 fn，并重新计时
     if (
@@ -23,12 +31,12 @@ export default (fn, threshold = 500) => {
       // 保证在当前时间区间结束后，再执行一次 fn
       timer = setTimeout(() => {
         window._cusThresholdLast = now;
-        fn();
+        fn(...argBackup);
       }, threshold);
       // 在时间区间的最开始和到达指定间隔的时候执行一次 fn
     } else {
       window._cusThresholdLast = now;
-      fn();
+      fn(...argBackup);
     }
   };
 };
