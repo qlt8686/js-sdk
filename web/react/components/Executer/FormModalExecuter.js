@@ -8,6 +8,7 @@ function ModalExecuter({
   children,
   container: Modal = <div></div>,
   component: Component,
+  initVal,
   ...restProps
 }) {
   const [getVisible, setVisible] = useState(true);
@@ -38,7 +39,7 @@ function ModalExecuter({
       }
       {...restProps}
     >
-      <Component getForm={getForm} />
+      <Component getForm={getForm} initVal={initVal} />
     </Modal>
   );
 }
