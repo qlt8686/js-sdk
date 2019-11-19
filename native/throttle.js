@@ -1,5 +1,3 @@
-import { deepClone } from './tco';
-
 // 摘自 http://hackll.com/2015/11/19/debounce-and-throttle/
 /**
  *
@@ -42,5 +40,5 @@ export default (fn, threshold = 500, backupParams) => {
 function cloneParams(target, origin) {
   return Array.isArray(target)
     ? target.reduce((acc, cur) => ({ ...acc, [cur]: origin[cur] }), {})
-    : { ...origin };
+    : origin;
 }
