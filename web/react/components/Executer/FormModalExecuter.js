@@ -7,15 +7,15 @@ function ModalExecuter({
   onCancel = () => {},
   children,
   container: Modal = <div></div>,
+  component: Component,
   ...restProps
 }) {
   const [getVisible, setVisible] = useState(true);
   const [getLoading, setLoading] = useState(false);
-
+  const [form, getForm] = useState({});
+  const { validateFields } = form;
   function injectLoading(fn, ...arg) {
-    console.log(fn);
     setLoading(true);
-    console.log(fn, ...arg);
     return new Promise(resolve => {
       resolve(fn(...arg));
     })
@@ -33,10 +33,12 @@ function ModalExecuter({
       visible={getVisible}
       isLoading={getLoading}
       onCancel={(...arg) => injectLoading(onCancel, ...arg)}
-      onOk={(...arg) => injectLoading(onOk, ...arg)}
+      onOk={(...arg) =>
+        validateFields((error, value) => injectLoading(onOk, value, ...arg))
+      }
       {...restProps}
     >
-      {children}
+      <Component getForm={getForm} />
     </Modal>
   );
 }
@@ -45,8 +47,8 @@ function factory(options) {
   return new ComponentExecter((<ModalExecuter {...options} />));
 }
 
-factory.use = container => {
-  return options => factory({ container, ...options });
+factory.preload = preloads => {
+  return options => factory({ ...preloads, ...options });
 };
 
 export default factory;
