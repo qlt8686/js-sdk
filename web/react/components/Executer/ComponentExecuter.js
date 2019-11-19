@@ -1,6 +1,7 @@
 import { cloneElement } from 'react';
 import { unmountComponentAtNode, render } from 'react-dom';
 import uuid from '../../../../native/uuid';
+import getIn from '../../../../native/getIn';
 
 export default class ComponentExecuter {
   static queueMap = new Map();
@@ -32,8 +33,11 @@ export default class ComponentExecuter {
   };
 
   destroy = () => {
-    unmountComponentAtNode(this.el);
-    this.el.parentNode.removeChild(this.el);
+    requestIdleCallback(() => {
+      unmountComponentAtNode(this.el);
+      const pNode = getIn(this, ['el', 'parentNode']);
+      pNode && pNode.removeChild(this.el);
+    });
     return ComponentExecuter.queueMap.delete(this.id);
   };
 }
