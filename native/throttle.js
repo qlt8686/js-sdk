@@ -16,9 +16,7 @@ export default (fn, threshold = 500, backupParams) => {
   return (...arg) => {
     const now = +new Date();
     const argBackup = backupParams
-      ? backupParams.map((coord, idx) =>
-          coord.reduce((acc, cur) => ({ ...acc, [cur]: arg[idx][cur] }), {})
-        )
+      ? backupParams.map((coord, idx) => cloneParams(coord, arg[idx]))
       : arg;
 
     // 如果距离上次执行 fn 函数的时间小于 threshold，那么就放弃
@@ -40,3 +38,9 @@ export default (fn, threshold = 500, backupParams) => {
     }
   };
 };
+
+function cloneParams(target, origin) {
+  return Array.isArray(target)
+    ? target.reduce((acc, cur) => ({ ...acc, [cur]: origin[cur] }), {})
+    : { ...origin };
+}
