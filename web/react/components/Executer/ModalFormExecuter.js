@@ -1,3 +1,4 @@
+// deprecated
 import React, { cloneElement } from 'react';
 import ReactDOM from 'react-dom';
 import { CusInputModal } from '../CusModal';
