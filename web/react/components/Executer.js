@@ -1,7 +1,7 @@
 import { cloneElement } from 'react';
 import { unmountComponentAtNode, render } from 'react-dom';
-import uuid from '../../../../native/uuid';
-import getIn from '../../../../native/getIn';
+import uuid from '../../../native/uuid';
+import getIn from '../../../native/getIn';
 
 export default class ComponentExecuter {
   static queueMap = new Map();
