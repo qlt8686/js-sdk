@@ -1,14 +1,23 @@
-import React, { forwardRef, useState, useEffect } from 'react';
+import React, { forwardRef, useState } from 'react';
 import { Upload, Icon } from 'antd';
-import getIn from '@/fe-sdk/utils/getIn';
 
 export default forwardRef(
-  ({ value, placeholder, onChange, fileHandler = () => {}, prefix, ...props }, ref) => {
+  (
+    {
+      value,
+      placeholder,
+      onChange,
+      fileHandler = () => {},
+      prefix,
+      ...restProps
+    },
+    ref,
+  ) => {
     const [getImgUrl, setImgUrl] = useState(value);
 
     const uploadButton = (
       <div>
-        <Icon type="plus" />
+        <Icon type='plus' />
         <div>{placeholder}</div>
       </div>
     );
@@ -31,10 +40,14 @@ export default forwardRef(
             onError(e);
           }
         }}
-        {...props}
+        {...restProps}
       >
         {getImgUrl ? (
-          <img src={`${prefix}${getImgUrl}`} alt="avatar" style={{ width: '100%' }} />
+          <img
+            src={`${prefix}${getImgUrl}`}
+            alt='avatar'
+            style={{ width: '100%' }}
+          />
         ) : (
           uploadButton
         )}

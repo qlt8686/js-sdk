@@ -7,7 +7,7 @@ import { Tabs, Icon, Dropdown, Menu } from 'antd';
 import styled from 'styled-components';
 import compose from '@/fe-sdk/utils/compose';
 import Authorized from '@/utils/Authorized';
-import getIn from '@/fe-sdk/utils/getIn';
+import getIn from '@/js-sdk/native/getIn';
 
 const tabsModels = modelsFactory({
   /* namespace */
@@ -194,7 +194,7 @@ const TabsContainer = ({
   useEffect(() => {
     app.replaceModel(tabsModels);
   }, []);
-  
+
   const { pathname, search, query } = location;
 
   const title = getIn(query, ['tabTitle'], '空标题');
