@@ -1,11 +1,24 @@
-export default function filter(target, candidate) {
+export default function filter(target, candidate, referenceNotNull) {
   if (typeof target !== 'object')
     throw new Error('target just arrow array or object');
-  const candidateArr = [].concat(candidate);
+  const trueCandidate =
+    typeof candidate === 'function' ? candidate : [].concat(candidate);
   const container = Array.isArray(target) ? [] : {};
   return Object.keys(target).reduce((acc, cur) => {
     const curValue = target[cur];
-    if (candidateArr.includes(curValue)) return acc;
+    if (
+      typeof candidate === 'function'
+        ? !trueCandidate(curValue)
+        : trueCandidate.includes(curValue)
+    )
+      return acc;
+    if (
+      referenceNotNull &&
+      typeof curValue === 'object' &&
+      !Object.values(curValue).filter(Boolean).length
+    )
+      return acc;
+
     acc[cur] = target[cur];
     return acc;
   }, container);
