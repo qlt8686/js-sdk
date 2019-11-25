@@ -19,7 +19,11 @@ export default function filter(target, candidate, referenceNotNull) {
     )
       return acc;
 
-    acc[cur] = target[cur];
-    return acc;
+    if (Array.isArray(target)) {
+      return [...acc, curValue];
+    } else {
+      return { ...acc, [cur]: curValue };
+    }
+
   }, container);
 }
