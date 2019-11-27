@@ -1,1 +1,1 @@
-export default new RegExp("https?://");
+export default new RegExp('^https?://');
