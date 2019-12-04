@@ -6,17 +6,13 @@
  *
  * @return {Function}     返回一个“节流”函数
  */
-export default (fn, threshold = 500, backupParams) => {
+export default (fn, threshold = 500) => {
   // 定时器
   let timer;
   // 默认间隔为 500ms
   // 返回的函数，每过 threshold 毫秒就执行一次 fn 函数
-  return (...arg) => {
+  return (...args) => {
     const now = +new Date();
-    const argBackup = backupParams
-      ? backupParams.map((coord, idx) => cloneParams(coord, arg[idx]))
-      : arg;
-
     // 如果距离上次执行 fn 函数的时间小于 threshold，那么就放弃
     // 执行 fn，并重新计时
     if (
@@ -27,18 +23,12 @@ export default (fn, threshold = 500, backupParams) => {
       // 保证在当前时间区间结束后，再执行一次 fn
       timer = setTimeout(() => {
         window._cusThresholdLast = now;
-        fn(...argBackup);
+        fn(...args);
       }, threshold);
       // 在时间区间的最开始和到达指定间隔的时候执行一次 fn
     } else {
       window._cusThresholdLast = now;
-      fn(...argBackup);
+      fn(...args);
     }
   };
 };
-
-function cloneParams(target, origin) {
-  return Array.isArray(target)
-    ? target.reduce((acc, cur) => ({ ...acc, [cur]: origin[cur] }), {})
-    : origin;
-}
