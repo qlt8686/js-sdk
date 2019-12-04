@@ -1,5 +1,15 @@
 import React, { useState, forwardRef } from 'react';
 import throttle from '../../../native/throttle';
+import styled from 'styled-components';
+
+const Wrap = styled.div`
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  overflow: scroll;
+  height: 100%;
+`;
 
 export default forwardRef(
   (
@@ -8,6 +18,7 @@ export default forwardRef(
       onPeak = () => {},
       onScroll = () => {},
       offset = 0,
+      delay = 500,
       children,
     },
     ref,
@@ -15,30 +26,30 @@ export default forwardRef(
     const [flag, setFlag] = useState(false);
 
     return (
-      <div
+      <Wrap
         ref={ref}
-        style={{ overflow: 'scroll' }}
         onScroll={event => {
           if (flag) return;
-          const target = event.currentTarget;
+          event.persist();
           setFlag(true);
-          throttle(current => {
+          throttle(e => {
+            const current = e.currentTarget;
             const { height } = current.getBoundingClientRect();
             const { scrollTop, scrollHeight } = current;
-            onScroll(target);
+            onScroll(current);
             if (scrollTop === 0) {
-              onSole(target);
+              onSole(current);
             }
             if (height + scrollTop >= scrollHeight - offset) {
-              onPeak(target);
+              onPeak(current);
             }
             setFlag(false);
-          }, 500)(target);
+          }, delay)(event);
         }}
       >
               {children}
             
-      </div>
+      </Wrap>
     );
   },
 );
