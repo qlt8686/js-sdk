@@ -5,7 +5,7 @@
 //  */
 export default function paramsPadding(params) {
   return Object.keys(params).reduce(
-    (acc, cur) => `${acc} ${cur}: ${assginType(params[cur])}`,
+    (acc, cur) => `${acc} ${cur}: ${assginType(params[cur])},`,
     '',
   );
 }
@@ -25,21 +25,12 @@ function assginType(value) {
 }
 
 function a2s(arr) {
-  return `[
-    ${arr.reduce(
-      (acc, cur) => `${acc}
-    ${assginType(cur)}`,
-      '',
-    )}
-  ]`;
+  return `[${arr.reduce((acc, cur) => `${acc} ${assginType(cur)},`, '')} ]`;
 }
 
 function o2s(obj) {
-  return `{
-    ${Object.keys(obj).reduce(
-      (acc, cur) => `${acc}
-    ${cur}: ${assginType(obj[cur])}`,
-      '',
-    )}
-  }`;
+  return `{${Object.keys(obj).reduce(
+    (acc, cur) => `${acc} ${cur}: ${assginType(obj[cur])},`,
+    '',
+  )} }`;
 }
