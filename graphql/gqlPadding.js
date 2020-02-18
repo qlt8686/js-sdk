@@ -4,10 +4,12 @@
  * @return { 出参 | String}
  */
 export default function gqlPadding(params) {
-  return Object.keys(params).reduce(
-    (acc, cur) => `${acc} ${cur}: ${assginType(params[cur])},`,
-    '',
-  );
+  return params
+    ? Object.keys(params).reduce(
+        (acc, cur) => `${acc} ${cur}: ${assginType(params[cur])},`,
+        '',
+      )
+    : '';
 }
 
 function assginType(value) {
