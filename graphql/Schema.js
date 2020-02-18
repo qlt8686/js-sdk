@@ -1,4 +1,4 @@
-class Outputer {
+class Schema {
   constructor(...args) {
     if (typeof args[0] === 'object') {
       this.output = args[0];
@@ -24,15 +24,15 @@ class Outputer {
   };
 
   set = (key, value) => {
-    return new Outputer({ ...this.output, [key]: value });
+    return new Schema({ ...this.output, [key]: value });
   };
 
   just = obj => {
-    return new Outputer(obj);
+    return new Schema(obj);
   };
 
   filter = (...args) => {
-    return new Outputer(
+    return new Schema(
       Object.keys(this.output).reduce(
         (acc, cur) =>
           args.includes(cur) ? acc : { ...acc, [cur]: this.output[cur] },
@@ -42,8 +42,8 @@ class Outputer {
   };
 }
 
-function outputerFactory(Obj) {
-  return new Outputer(Obj);
+function schemaFactory(Obj) {
+  return new Schema(Obj);
 }
 
-export default outputerFactory;
+export default schemaFactory;
