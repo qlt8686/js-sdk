@@ -1,37 +1,49 @@
 class Outputer {
   constructor(...args) {
-    this.output = args;
+    if (typeof args[0] === 'object') {
+      this.output = args[0];
+    } else {
+      this.output = args.reduce((acc, cur) => ({ ...acc, [cur]: cur }), {});
+    }
   }
 
   toString = () => {
-    return `{${this.output.reduce(
+    return `{${Object.keys(this.output).reduce(
       (acc, cur) =>
         `${acc} ${
-          typeof cur === 'string'
+          typeof this.output[cur] === 'string'
             ? cur
-            : Object.keys(cur).reduce((_, c) => `${c} ${cur[c]}`, '')
+            : `${cur} ${this.output[cur]}`
         },`,
       '',
     )}}`;
   };
 
-  just = (...args) => {
-    return new Outputer(...args);
+  get = key => {
+    return this.output[key];
+  };
+
+  set = (key, value) => {
+    return new Outputer({ ...this.output, [key]: value });
+  };
+
+  just = obj => {
+    return new Outputer(obj);
   };
 
   filter = (...args) => {
     return new Outputer(
-      ...this.output.filter(cur =>
-        typeof cur === 'string'
-          ? !args.includes(cur)
-          : args.includes(Object.keys(cur)[0]),
+      Object.keys(this.output).reduce(
+        (acc, cur) =>
+          args.includes(cur) ? acc : { ...acc, [cur]: this.output[cur] },
+        {},
       ),
     );
   };
 }
 
-function outputerFactory(...args) {
-  return new Outputer(...args);
+function outputerFactory(Obj) {
+  return new Outputer(Obj);
 }
 
 export default outputerFactory;
