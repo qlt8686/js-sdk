@@ -22,7 +22,7 @@ function assginType(value) {
     case 'object':
       return Array.isArray(value) ? a2s(value) : o2s(value);
     default:
-      throw new Error(`no valid type, ${typeof value}, ${value}`);
+      console.error(`no valid type, ${typeof value}, ${value}`);
   }
 }
 
