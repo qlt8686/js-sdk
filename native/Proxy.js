@@ -11,13 +11,18 @@ export default class Proxy {
   setIn(k, v) {
     let temp = this;
     for (let i = 0; i < k.length; i += 1) {
+      const ck = k[i];
+
       if (i + 1 === k.length) {
-        temp[k[i]] = v;
-      } else {
-        temp[k[i]] = {};
+        temp[ck] = v;
+        break;
       }
 
-      temp = temp[k[i]];
+      if (!temp[ck]) {
+        temp[ck] = {};
+      }
+
+      temp = temp[ck];
     }
 
     return this;
