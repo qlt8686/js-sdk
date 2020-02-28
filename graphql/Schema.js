@@ -42,8 +42,8 @@ class Schema {
   };
 }
 
-function schemaFactory(Obj) {
-  return new Schema(Obj);
+function schemaFactory(...Obj) {
+  return new Schema(...Obj);
 }
 
 export default schemaFactory;
