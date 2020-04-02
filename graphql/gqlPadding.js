@@ -3,8 +3,16 @@
  * @param {入参 | Obj} params
  * @return { 出参 | String}
  */
+export default function gqlPadding(params) {
+  return params
+    ? Object.keys(params).reduce(
+        (acc, cur) => `${acc} ${cur}: ${assginType(params[cur])},`,
+        '',
+      )
+    : '';
+}
 
-export default function assginType(value) {
+function assginType(value) {
   switch (typeof value) {
     case 'number':
     case 'boolean':
@@ -18,18 +26,13 @@ export default function assginType(value) {
   }
 }
 
-function o2s(params) {
-  return params
-    ? Object.keys(params).reduce(
-        (acc, cur) =>
-          params[cur] === undefined
-            ? acc
-            : `${acc} ${cur}: ${assginType(params[cur])},`,
-        '',
-      )
-    : '';
-}
-
 function a2s(arr) {
   return `[${arr.reduce((acc, cur) => `${acc} ${assginType(cur)},`, '')} ]`;
+}
+
+function o2s(obj) {
+  return `{${Object.keys(obj).reduce(
+    (acc, cur) => `${acc} ${cur}: ${assginType(obj[cur])},`,
+    '',
+  )} }`;
 }
