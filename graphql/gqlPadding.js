@@ -32,7 +32,8 @@ function a2s(arr) {
 
 function o2s(obj) {
   return `{${Object.keys(obj).reduce(
-    (acc, cur) => `${acc} ${cur}: ${assginType(obj[cur])},`,
+    (acc, cur) =>
+      obj[cur] === undefined ? acc : `${acc} ${cur}: ${assginType(obj[cur])},`,
     '',
   )} }`;
 }
