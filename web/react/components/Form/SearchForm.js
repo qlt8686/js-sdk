@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react';
-import { useHistory, useLocation } from 'dva';
-
+import React from 'react';
+import { useHistory, useLocation } from 'umi';
 import { Form, Button } from 'antd';
 
 import debounce from '@/js-sdk/native/debounce';
