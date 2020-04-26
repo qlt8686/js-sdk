@@ -16,7 +16,15 @@ export default function CusSearchForm({ conditions = [] }) {
   const condition = {
     '@wrap': [
       <Form
-        initialValues={query}
+        initialValues={Object.keys(query).reduce(
+          (acc, cur) => ({
+            ...acc,
+            [cur]: moment(query[cur]).isValid()
+              ? moment(query[cur])
+              : query[cur],
+          }),
+          {},
+        )}
         form={form}
         layout="inline"
         onFinish={debounce(e => {
