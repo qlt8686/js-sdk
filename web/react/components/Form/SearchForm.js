@@ -76,14 +76,14 @@ export default function CusSearchForm({ conditions = [] }) {
         查找
       </Button>,
       <Button
-        onClick={() => {
+        onClick={debounce(() => {
           if (search) {
             history.push({
               pathname,
             });
           }
           setTimeout(form.resetFields);
-        }}
+        }, 300)}
       >
         清空
       </Button>,
