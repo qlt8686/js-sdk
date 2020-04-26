@@ -1,130 +1,86 @@
 import React, { useEffect } from 'react';
-import router from 'umi/router';
-import { withRouter } from 'dva/router';
+import { useHistory, useLocation } from 'dva';
 
-import { isEqual } from 'lodash';
-import { Form, Button, Input, Row, Col } from 'antd';
+import { Form, Button } from 'antd';
+
+import debounce from '@/js-sdk/native/debounce';
+import conditionRender from 'condition-render';
 import moment from 'moment';
-import FormFactory from '.';
+moment.locale('zh-cn');
 
-import compose from '@/fe-sdk/utils/compose';
-import { debounce } from '@/fe-sdk/utils/delayer';
+export default function CusSearchForm({ conditions = [] }) {
+  const history = useHistory();
+  const { pathname, query, search } = useLocation();
+  const [form] = Form.useForm();
 
-const { create, Item } = Form;
+  const condition = {
+    '@wrap': [
+      <Form
+        initialValues={query}
+        form={form}
+        layout="inline"
+        onFinish={debounce(e => {
+          const q = Object.keys(e).reduce(
+            (acc, cur) => ({
+              ...acc,
+              [cur]: moment.isMoment(e[cur]) ? e[cur].toISOString() : e[cur],
+            }),
+            {},
+          );
+          history.push({
+            pathname,
+            query: q,
+          });
+        }, 300)}
+      />,
+    ],
+    '@decorator': [
+      (Target, params) => {
+        const { title, field, rules = [], required } = params;
+        const ext = field
+          ? {
+              name: field,
+            }
+          : {};
 
-export default compose(
-  create(),
-  withRouter,
-)(CusSearchForm);
-
-function CusSearchForm({
-  form,
-  conditions = [],
-  getInnerForm = () => {},
-  location: { pathname, query, search },
-  onSubmit = debounce(e => {
-    const { validateFields } = form;
-    validateFields((error, value) => {
-      if (error) {
-        console.error(error);
-      }
-
-      const temp = { ...value };
-      Object.keys(temp).forEach(key => {
-        if (!temp[key]) {
-          delete temp[key];
+        // 如果有required 简写 rulue
+        if (required) {
+          ext.rules = [
+            { required: true, message: `${title || field}不能为空` },
+          ];
         }
-        if (temp[key] instanceof moment) {
-          temp[key] = temp[key].format('YYYY-MM-DD');
+
+        // 如果有rule则使用自定义rule
+        if (rules.length) {
+          ext.rules = rules;
         }
-      });
 
-      // if (!isEqual(query, temp) && !Object.values(temp).every(i => !i)) {
-      router.push({
-        pathname,
-        query: temp,
-      });
-      // }
-    });
-  }, 300),
-  onReset = e => {
-    form.resetFields();
-    if (search) {
-      router.push({
-        pathname,
-      });
-    }
-  },
-}) {
-  const { setFieldsValue } = form;
+        return (
+          <Form.Item label={title} {...ext} style={{ marginBottom: 8 }}>
+            {Target}
+          </Form.Item>
+        );
+      },
+    ],
+    '@component': [
+      ...conditions,
+      <Button type="primary" htmlType="submit">
+        查找
+      </Button>,
+      <Button
+        onClick={() => {
+          if (search) {
+            history.push({
+              pathname,
+            });
+          }
+          setTimeout(form.resetFields);
+        }}
+      >
+        清空
+      </Button>,
+    ],
+  };
 
-  useEffect(() => {
-    getInnerForm(form);
-  }, []);
-
-  useEffect(() => {
-    const fields = Object.keys(query).reduce((acc, cur) => {
-      const temp = { ...acc };
-      if (conditions.some(condition => condition.field === cur)) {
-        temp[cur] = query[cur];
-      }
-      return temp;
-    }, {});
-
-    setFieldsValue(fields);
-  }, [query]);
-
-  const CusInputFomrConditions = [
-    {
-      childrenCondition: ({
-        component,
-        title,
-        field,
-        labelCol = { span: 8 },
-        wrapperCol = { span: title ? 16 : 24 },
-        required,
-        placeholder,
-        rcFormOptions,
-        props,
-      }) => ({
-        component: component || Input,
-        wraps: [
-          <Col xxl={6} lg={8} md={12} sm={24} xs={24} />,
-          <Item label={title} labelCol={labelCol} wrapperCol={wrapperCol} />,
-        ],
-        rcFormOptions: {
-          rules: [
-            {
-              required,
-              message: `需要${title || field}`,
-            },
-          ],
-          ...rcFormOptions,
-        },
-        props: {
-          placeholder: placeholder || `${title || field}`,
-          ...props,
-        },
-      }),
-      wraps: [
-        <Form onSubmit={onSubmit} labelAlign="left" />,
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }} type="flex" />,
-      ],
-      component: [
-        ...conditions,
-        {
-          component: [
-            <Button type="primary" htmlType="submit">
-              查询
-            </Button>,
-            <Button style={{ marginLeft: 8 }} onClick={onReset}>
-              重置
-            </Button>,
-          ],
-        },
-      ],
-    },
-  ];
-
-  return <FormFactory form={form} conditions={CusInputFomrConditions} />;
+  return conditionRender(condition);
 }
