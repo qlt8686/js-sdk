@@ -1,4 +1,4 @@
-import { cloneElement } from 'react';
+import { cloneElement, isValidElement } from 'react';
 import { unmountComponentAtNode, render } from 'react-dom';
 import uuid from '../../../native/uuid';
 import getIn from '../../../native/getIn';
@@ -10,7 +10,11 @@ export default class ComponentExecuter {
   };
 
   constructor(Component) {
-    this.Component = Component;
+    this.Component = React.isValidElement(Component) ? (
+      Component
+    ) : (
+      <Component />
+    );
     this.el = document.createElement('div');
     const id = `execter-${uuid(6, 16)}`;
     this.el.setAttribute('id', id);
