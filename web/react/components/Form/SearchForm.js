@@ -18,7 +18,9 @@ export default function CusSearchForm({ conditions = [] }) {
         initialValues={Object.keys(query).reduce(
           (acc, cur) => ({
             ...acc,
-            [cur]: moment(query[cur]).isValid()
+            [cur]: Array.isArray(query[cur])
+              ? query[cur]
+              : moment(query[cur]).isValid()
               ? moment(query[cur])
               : query[cur],
           }),
