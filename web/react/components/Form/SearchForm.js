@@ -3,6 +3,7 @@ import { useHistory, useLocation } from 'umi';
 import { Form, Button } from 'antd';
 
 import debounce from '@/js-sdk/native/debounce';
+import ISODate from '@/js-sdk/regexp/ISODate';
 import conditionRender from 'condition-render';
 import moment from 'moment';
 moment.locale('zh-cn');
@@ -20,7 +21,7 @@ export default function CusSearchForm({ conditions = [] }) {
             ...acc,
             [cur]: Array.isArray(query[cur])
               ? query[cur]
-              : moment(query[cur]).isValid()
+              : ISODate.test(query[cur])
               ? moment(query[cur])
               : query[cur],
           }),
