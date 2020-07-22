@@ -8,7 +8,11 @@ import conditionRender from 'condition-render';
 import moment from 'moment';
 moment.locale('zh-cn');
 
-export default function CusSearchForm({ conditions = [], searchText="查找", cancelText="清空" }) {
+export default function CusSearchForm({
+  conditions = [],
+  searchText = '查找',
+  cancelText = '清空',
+}) {
   const history = useHistory();
   const { pathname, query, search } = useLocation();
   const [form] = Form.useForm();
@@ -31,10 +35,15 @@ export default function CusSearchForm({ conditions = [], searchText="查找", ca
         layout="inline"
         onFinish={debounce(e => {
           const q = Object.keys(e).reduce(
-            (acc, cur) => ({
-              ...acc,
-              [cur]: moment.isMoment(e[cur]) ? e[cur].toISOString() : e[cur],
-            }),
+            (acc, cur) =>
+              e[cur]
+                ? {
+                    ...acc,
+                    [cur]: moment.isMoment(e[cur])
+                      ? e[cur].toISOString()
+                      : e[cur],
+                  }
+                : acc,
             {},
           );
           history.push({
@@ -75,7 +84,7 @@ export default function CusSearchForm({ conditions = [], searchText="查找", ca
     '@component': [
       ...conditions,
       <Button type="primary" htmlType="submit">
-      {searchText}
+        {searchText}
       </Button>,
       <Button
         onClick={debounce(() => {
@@ -87,7 +96,7 @@ export default function CusSearchForm({ conditions = [], searchText="查找", ca
           setTimeout(form.resetFields);
         }, 300)}
       >
-      {cancelText} 
+        {cancelText}
       </Button>,
     ],
   };
