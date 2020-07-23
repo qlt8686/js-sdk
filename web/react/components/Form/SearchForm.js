@@ -14,7 +14,9 @@ export default forwardRef(
     const { pathname, query, search } = useLocation();
     const [form] = Form.useForm();
     useLayoutEffect(() => {
-      ref.current = form;
+      if (ref) {
+        ref.current = form;
+      }
     }, [form, ref]);
 
     const condition = {
