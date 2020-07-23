@@ -1,4 +1,4 @@
-import React, { cloneElement, isValidElement } from 'react';
+import React, { cloneElement } from 'react';
 import { unmountComponentAtNode, render } from 'react-dom';
 import uuid from '../../../native/uuid';
 import getIn from '../../../native/getIn';
