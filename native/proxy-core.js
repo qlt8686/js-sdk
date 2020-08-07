@@ -9,5 +9,5 @@ export default (url, proxy) => {
   const { target, pathRewrite = {} } = proxy[matchKey] || {};
   const [source = ' ', targ] = Object.entries(pathRewrite)[0] || [];
   const proxyUrl = url.replace(RegExp(source), targ);
-  return target + proxyUrl;
+  return typeof target === 'function' ? target() + proxyUrl : target + proxyUrl;
 };
