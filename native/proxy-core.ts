@@ -4,7 +4,17 @@
  * @param {url} url 请求的url
  * @param {options} Options proxy的参数
  */
-export default (url, proxy) => {
+
+export interface ProxySchma {
+  [matchPath: string]: {
+    target: string | Function;
+    pathRewrite?: {
+      [searchvalue: string]: string;
+    };
+  };
+}
+
+export default (url: string, proxy: ProxySchma) => {
   const matchKey = Object.keys(proxy).find(i => url.match(`^${i}`)) || '';
   const { target, pathRewrite = {} } = proxy[matchKey] || {};
   const [source = ' ', targ] = Object.entries(pathRewrite)[0] || [];
