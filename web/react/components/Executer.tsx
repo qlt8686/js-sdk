@@ -1,4 +1,5 @@
 import React, { cloneElement } from "react";
+import type { Attributes, ReactNode } from "react";
 import { unmountComponentAtNode, render } from "react-dom";
 import uuid from "../../../native/uuid";
 
@@ -13,37 +14,33 @@ export default class ComponentExecuter {
   id: string;
 
   constructor(Component: React.ReactElement | React.FC | React.ComponentClass) {
-    this.Component = React.isValidElement(Component)
+    const comp = React.isValidElement(Component)
       ? (
         Component
       )
       : (
         <Component />
       );
+
+    this.Component = cloneElement(comp, {
+      executerInstance: this,
+    });
     this.el = document.createElement("div");
     const id = `execter-${uuid(6, 16)}`;
     this.el.setAttribute("id", id);
     this.id = id;
     document.body.appendChild(this.el); // add the text node to the newly created div.
+
     ComponentExecuter.queueMap.set(id, this);
   }
 
   Show() {
-    const elementWithInstance = cloneElement(this.Component, {
-      executerInstance: this,
-    });
-    render(elementWithInstance, this.el);
+    render(this.Component, this.el);
     return this;
   }
 
-  Update(Component: React.ReactElement | React.FC | React.ComponentClass) {
-    this.Component = React.isValidElement(Component)
-      ? (
-        Component
-      )
-      : (
-        <Component />
-      );
+  Update<P>(props?: Partial<P> & Attributes, ...children: ReactNode[]) {
+    this.Component = cloneElement(this.Component, props, ...children);
     return this;
   }
 
