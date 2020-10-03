@@ -9,12 +9,12 @@ export default class ComponentExecuter {
     ComponentExecuter.queueMap.forEach((execter) => execter.Destroy());
   };
 
-  Component: React.ReactElement;
-  el: HTMLDivElement;
-  id: string;
+  protected comp: React.ReactElement;
+  protected el: HTMLDivElement;
+  protected id: string;
 
   constructor(Component: React.ReactElement | React.FC | React.ComponentClass) {
-    this.Component = React.isValidElement(Component)
+    this.comp = React.isValidElement(Component)
       ? (
         Component
       )
@@ -32,13 +32,12 @@ export default class ComponentExecuter {
   }
 
   Execute() {
-    console.log("Execute", this.Component);
-    render(this.Component, this.el);
+    render(this.comp, this.el);
     return this;
   }
 
   Update<P>(props?: Partial<P> & Attributes, ...children: ReactNode[]) {
-    this.Component = cloneElement(this.Component, props, ...children);
+    this.comp = cloneElement(this.comp, props, ...children);
     return this;
   }
 
