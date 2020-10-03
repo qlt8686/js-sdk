@@ -14,7 +14,7 @@ export default class ComponentExecuter {
   id: string;
 
   constructor(Component: React.ReactElement | React.FC | React.ComponentClass) {
-    const comp = React.isValidElement(Component)
+    this.Component = React.isValidElement(Component)
       ? (
         Component
       )
@@ -22,9 +22,6 @@ export default class ComponentExecuter {
         <Component />
       );
 
-    this.Component = cloneElement(comp, {
-      execInst: this,
-    });
     this.el = document.createElement("div");
     const id = `execter-${uuid(6, 16)}`;
     this.el.setAttribute("id", id);
@@ -35,6 +32,7 @@ export default class ComponentExecuter {
   }
 
   Execute() {
+    console.log("Execute", this.Component);
     render(this.Component, this.el);
     return this;
   }
