@@ -23,7 +23,7 @@ export default class ComponentExecuter {
       );
 
     this.Component = cloneElement(comp, {
-      executerInstance: this,
+      execInst: this,
     });
     this.el = document.createElement("div");
     const id = `execter-${uuid(6, 16)}`;
@@ -34,7 +34,7 @@ export default class ComponentExecuter {
     ComponentExecuter.queueMap.set(id, this);
   }
 
-  Show() {
+  Execute() {
     render(this.Component, this.el);
     return this;
   }
