@@ -44,9 +44,8 @@ export default class ComponentExecuter {
   Destroy() {
     window.requestIdleCallback(() => {
       unmountComponentAtNode(this.el);
-      const pNode = this?.el?.parentNode;
-      pNode?.removeChild(this?.el as HTMLDivElement);
+      this?.el.remove();
+      ComponentExecuter.queueMap.delete(this.id);
     });
-    return ComponentExecuter.queueMap.delete(this.id);
   }
 }
