@@ -5,9 +5,9 @@ import uuid from "../../../native/uuid";
 
 export default class ComponentExecuter {
   static queueMap = new Map();
-  static DestroyAll = () => {
+  static DestroyAll() {
     ComponentExecuter.queueMap.forEach((execter) => execter.Destroy());
-  };
+  }
 
   protected comp: React.ReactElement;
   protected el: HTMLDivElement;
