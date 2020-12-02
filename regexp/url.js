@@ -2,7 +2,6 @@ export default new RegExp(
   'https?://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]',
 );
 
-
 // 匹配所有链接
 // const firstSplit = new RegExp(
 //   '.*https?://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|].*',

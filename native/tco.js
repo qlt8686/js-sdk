@@ -74,7 +74,9 @@ export const deepClone = x => {
 const fib_impl = (n, cont) =>
   n < 1
     ? cont(1)
-    : fib_impl.bind(null, n - 1, x => fib_impl.bind(null, n - 2, y => cont.bind(null, x + y)));
+    : fib_impl.bind(null, n - 1, x =>
+        fib_impl.bind(null, n - 2, y => cont.bind(null, x + y)),
+      );
 
 export const fib = n => trampoline(fib_impl.bind(null, n, r => r));
 

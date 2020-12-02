@@ -17,7 +17,11 @@ const codeMessage = {
   504: '网关超时。',
 };
 
-export default ({ informer = () => {}, requestChain = () => {} }) => (url, option, extra = {}) => {
+export default ({ informer = () => {}, requestChain = () => {} }) => (
+  url,
+  option,
+  extra = {},
+) => {
   const { silence, errCatch } = extra;
   const dontTip = [].concat(silence);
   return xhrRequest({ url, ...option })
@@ -67,7 +71,7 @@ function xhrRequest({
       case 'get': {
         reqUrl = Object.keys(params).reduce(
           (acc, cur) => `${acc}&${cur}=${params[cur]}`,
-          url + '?'
+          url + '?',
         );
         break;
       }

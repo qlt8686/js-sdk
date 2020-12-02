@@ -1,8 +1,7 @@
 export default function uuid(len: number, radix: number): string {
-  const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-    .split(
-      "",
-    );
+  const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split(
+    '',
+  );
 
   const uuid = [];
   let i;
@@ -16,8 +15,8 @@ export default function uuid(len: number, radix: number): string {
     // rfc4122, version 4 form
     let r;
     // rfc4122 requires these characters
-    uuid[8] = uuid[13] = uuid[18] = uuid[23] = "-";
-    uuid[14] = "4";
+    uuid[8] = uuid[13] = uuid[18] = uuid[23] = '-';
+    uuid[14] = '4';
     // Fill in random data.  At i==19 set the high bits of clock sequence as
     // per rfc4122, sec. 4.1.5
     for (i = 0; i < 36; i++) {
@@ -27,5 +26,5 @@ export default function uuid(len: number, radix: number): string {
       }
     }
   }
-  return uuid.join("");
+  return uuid.join('');
 }

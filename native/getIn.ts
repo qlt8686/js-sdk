@@ -12,7 +12,9 @@ export default function getIn(
 ): any {
   let temp: Record<any, any> | undefined;
   if (
-    object && typeof array === "object" && typeof object === "object" &&
+    object &&
+    typeof array === 'object' &&
+    typeof object === 'object' &&
     array.length > 0
   ) {
     temp = object;

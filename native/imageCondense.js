@@ -48,7 +48,7 @@ export default ({
             -targetWidth,
             -targetHeight,
             targetWidth,
-            targetHeight
+            targetHeight,
           );
           break;
         case 8: // 旋转-90度

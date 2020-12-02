@@ -24,6 +24,5 @@ export default function filter(target, candidate, referenceNotNull) {
     } else {
       return { ...acc, [cur]: curValue };
     }
-
   }, container);
 }

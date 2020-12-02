@@ -28,12 +28,9 @@ function CusTable({
     getChangeRows(() => setRows);
   }, []);
 
-  useEffect(
-    () => {
-      !!getRows && getRows(rows);
-    },
-    [rows]
-  );
+  useEffect(() => {
+    !!getRows && getRows(rows);
+  }, [rows]);
 
   const handleSelectRows = rows => {
     setRows(rows);

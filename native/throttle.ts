@@ -14,10 +14,7 @@ export default function Throttle(fn: Function, threshold = 500) {
     const now = Date.now();
     // 如果距离上次执行 fn 函数的时间小于 threshold，那么就放弃
     // 执行 fn，并重新计时
-    if (
-      last &&
-      now < last + threshold
-    ) {
+    if (last && now < last + threshold) {
       clearTimeout(timer);
       // 保证在当前时间区间结束后，再执行一次 fn
       timer = setTimeout(() => {

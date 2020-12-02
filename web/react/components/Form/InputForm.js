@@ -8,7 +8,12 @@ const { create, Item } = Form;
 
 export default compose(create())(CusInputForm);
 
-export function CusInputForm({ form, conditions = [], getInnerForm = () => {}, onSubmit }) {
+export function CusInputForm({
+  form,
+  conditions = [],
+  getInnerForm = () => {},
+  onSubmit,
+}) {
   const { getFieldValue } = form;
 
   useEffect(() => {
@@ -81,8 +86,14 @@ export function CusInputForm({ form, conditions = [], getInnerForm = () => {}, o
           ...compProps,
         },
       }),
-      wraps: [<Form onSubmit={onSubmit} />, <Row gutter={{ md: 8, lg: 24, xl: 48 }} type="flex" />],
-      component: [...conditions, <Button htmlType="submit" style={{ display: 'none' }} />],
+      wraps: [
+        <Form onSubmit={onSubmit} />,
+        <Row gutter={{ md: 8, lg: 24, xl: 48 }} type="flex" />,
+      ],
+      component: [
+        ...conditions,
+        <Button htmlType="submit" style={{ display: 'none' }} />,
+      ],
     },
   ];
 

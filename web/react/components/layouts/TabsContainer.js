@@ -23,38 +23,23 @@ const tabsModels = modelsFactory({
         tabPanes: [],
       };
     },
-    setCurrentTab(
-      state,
-      {
-        payload: { currentTab },
-      }
-    ) {
+    setCurrentTab(state, { payload: { currentTab } }) {
       return {
         ...state,
         currentTab,
       };
     },
-    addTabPanes(
-      state,
-      {
-        payload: { pane },
-      }
-    ) {
+    addTabPanes(state, { payload: { pane } }) {
       const { tabPanes } = state;
       return {
         ...state,
         tabPanes: [...tabPanes, pane],
       };
     },
-    setTabPanes(
-      state,
-      {
-        payload: { pane },
-      }
-    ) {
+    setTabPanes(state, { payload: { pane } }) {
       const { tabPanes } = state;
       const oldPaneIndex = tabPanes.findIndex(
-        i => i.pathname === pane.pathname
+        i => i.pathname === pane.pathname,
       );
       const newPane = [...tabPanes];
       newPane[oldPaneIndex] = pane;
@@ -63,12 +48,7 @@ const tabsModels = modelsFactory({
         tabPanes: newPane,
       };
     },
-    removeTabPanes(
-      state,
-      {
-        payload: { paneIndex },
-      }
-    ) {
+    removeTabPanes(state, { payload: { paneIndex } }) {
       const { tabPanes } = state;
       const newPane = tabPanes.filter(i => i.fullpath !== paneIndex);
       return {
@@ -190,7 +170,6 @@ const TabsContainer = ({
   routes,
   location,
 }) => {
-
   useEffect(() => {
     app.replaceModel(tabsModels);
   }, []);
@@ -222,7 +201,7 @@ const TabsContainer = ({
 
     if (multiple) {
       const finedPane = tabPanes.some(
-        pane => pane && pane.fullpath === fullpath
+        pane => pane && pane.fullpath === fullpath,
       );
       if (!finedPane) {
         dispatch({
@@ -234,7 +213,7 @@ const TabsContainer = ({
       }
     } else {
       const finedPane = tabPanes.find(
-        pane => pane && pane.pathname === pathname
+        pane => pane && pane.pathname === pathname,
       );
       if (finedPane) {
         if (finedPane.search !== search) {
@@ -265,7 +244,7 @@ const TabsContainer = ({
   // 删除对应tab
   function removeTab(key) {
     const currentIndex = tabPanes.findIndex(
-      tabPane => tabPane.fullpath === fullpath
+      tabPane => tabPane.fullpath === fullpath,
     );
     if (key === fullpath) {
       const newTab =
@@ -408,5 +387,5 @@ const TabsContainer = ({
 
 export default compose(
   connect(({ tabs: { tabPanes, currentTab } }) => ({ tabPanes, currentTab })),
-  withRouter
+  withRouter,
 )(TabsContainer);

@@ -17,7 +17,7 @@ export default forwardRef(
 
     const uploadButton = (
       <div>
-        <Icon type='plus' />
+        <Icon type="plus" />
         <div>{placeholder}</div>
       </div>
     );
@@ -45,7 +45,7 @@ export default forwardRef(
         {getImgUrl ? (
           <img
             src={`${prefix}${getImgUrl}`}
-            alt='avatar'
+            alt="avatar"
             style={{ width: '100%' }}
           />
         ) : (

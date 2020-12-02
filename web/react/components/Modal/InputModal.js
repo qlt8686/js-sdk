@@ -46,7 +46,11 @@ function CusInputModal({
       cancelText={cancelText}
       {...restProps}
     >
-      <CusInputForm conditions={conditions} onSubmit={handlerSubmit} getInnerForm={setInnerForm} />
+      <CusInputForm
+        conditions={conditions}
+        onSubmit={handlerSubmit}
+        getInnerForm={setInnerForm}
+      />
     </Modal>
   );
 }

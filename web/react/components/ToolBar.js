@@ -11,10 +11,12 @@ const Wrap = styled.div`
   & > * {
     :not(:last-child) {
       margin-right: ${({ direction }) => (direction === 'row' ? 6 : 0)}px;
-      margin-left: ${({ direction }) => (direction === 'row-reverse' ? 6 : 0)}px;
-      margin-top: ${({ direction }) => (direction === 'column-reverse' ? 8 : 0)}px;
+      margin-left: ${({ direction }) =>
+        direction === 'row-reverse' ? 6 : 0}px;
+      margin-top: ${({ direction }) =>
+        direction === 'column-reverse' ? 8 : 0}px;
       margin-bottom: ${({ direction, wrap }) =>
-        (direction === 'column' || wrap === 'true' ? 8 : 0)}px;
+        direction === 'column' || wrap === 'true' ? 8 : 0}px;
     }
   }
   display: flex;
@@ -28,7 +30,8 @@ function CusToolBar({ options = [], direction = 'row', wrap = false }) {
       {options
         .filter(i => !!i)
         .map((option, index) => {
-          if (isValidElement(option)) return cloneElement(option, { key: index });
+          if (isValidElement(option))
+            return cloneElement(option, { key: index });
           const {
             confirm,
             disabled,
@@ -51,7 +54,13 @@ function CusToolBar({ options = [], direction = 'row', wrap = false }) {
                 okText="确认"
                 cancelText="取消"
               >
-                <Button icon={icon} size={size} loading={loading} type={type} disabled={disabled}>
+                <Button
+                  icon={icon}
+                  size={size}
+                  loading={loading}
+                  type={type}
+                  disabled={disabled}
+                >
                   {title}
                 </Button>
               </Popconfirm>

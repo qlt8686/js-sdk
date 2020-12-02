@@ -2,7 +2,10 @@ import XLSX from 'xlsx';
 
 export default function downloadExl({ json, type, name }) {
   const wb = XLSX.utils.book_new();
-  const ws = XLSX.utils.json_to_sheet(json, { header: Object.keys(json[0]), skipHeader: true });
+  const ws = XLSX.utils.json_to_sheet(json, {
+    header: Object.keys(json[0]),
+    skipHeader: true,
+  });
 
   XLSX.utils.book_append_sheet(wb, ws, 'sheetName');
 
@@ -11,7 +14,11 @@ export default function downloadExl({ json, type, name }) {
       s2ab(
         XLSX.write(
           wb,
-          { bookType: type === undefined ? 'xlsx' : type, bookSST: false, type: 'binary' }, // 这里的数据是用来定义导出的格式类型
+          {
+            bookType: type === undefined ? 'xlsx' : type,
+            bookSST: false,
+            type: 'binary',
+          }, // 这里的数据是用来定义导出的格式类型
         ),
       ),
     ],

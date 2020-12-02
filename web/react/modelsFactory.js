@@ -38,7 +38,7 @@ export default ({
           const services = params => request(value, params);
           newEffects[key] = function*(
             { payload, silence, errCatcher = true },
-            { call, put }
+            { call, put },
           ) {
             try {
               // 错误处理和消息提示
@@ -68,7 +68,7 @@ export default ({
           break;
         default:
           throw new Error(
-            'only can support function and string, please checkout your params valid!'
+            'only can support function and string, please checkout your params valid!',
           );
       }
 
@@ -86,7 +86,7 @@ export default ({
     {
       state: store,
       effects: {},
-    }
+    },
   );
 
   return {

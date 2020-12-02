@@ -1,9 +1,9 @@
 export default function copy(value: any, success = () => {}, fail = () => {}) {
-  const input = document.createElement("input");
+  const input = document.createElement('input');
   document.body.appendChild(input);
-  input.setAttribute("value", value);
+  input.setAttribute('value', value);
   input.select();
-  const ok = document.execCommand("copy");
+  const ok = document.execCommand('copy');
   if (ok) {
     success();
   } else {
