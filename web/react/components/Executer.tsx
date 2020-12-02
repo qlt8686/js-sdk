@@ -1,3 +1,4 @@
+// Undo weakMap 重构队列
 import React, { cloneElement } from "react";
 import type { Attributes, ReactNode } from "react";
 import { unmountComponentAtNode, render } from "react-dom";
@@ -42,10 +43,18 @@ export default class ComponentExecuter {
   }
 
   Destroy() {
-    window.requestIdleCallback(() => {
-      unmountComponentAtNode(this.el);
-      this?.el.remove();
-      ComponentExecuter.queueMap.delete(this.id);
-    });
+    if (window.requestIdleCallback){
+      window.requestIdleCallback(() => {
+        unmountComponentAtNode(this.el);
+        this?.el.remove();
+        ComponentExecuter.queueMap.delete(this.id);
+      });
+    }else{
+      window.setTimeout(() => {
+        unmountComponentAtNode(this.el);
+        this?.el.remove();
+        ComponentExecuter.queueMap.delete(this.id);
+      });
+    }
   }
 }
