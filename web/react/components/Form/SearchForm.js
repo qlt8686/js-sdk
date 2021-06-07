@@ -48,6 +48,21 @@ export default forwardRef(
                   : acc,
               {},
             );
+            q.recorded_date =
+              q.recorded_date &&
+              moment(q.recorded_date)
+                .startOf('day')
+                .format();
+            q.create_date =
+              q.create_date &&
+              moment(q.create_date)
+                .startOf('day')
+                .format();
+            q.end_date =
+              q.end_date &&
+              moment(q.end_date)
+                .endOf('day')
+                .format();
             history.push({
               pathname,
               query: q,
